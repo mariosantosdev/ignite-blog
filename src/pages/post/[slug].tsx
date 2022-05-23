@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useMemo } from 'react';
 import { format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
@@ -35,29 +36,29 @@ interface Post {
 
 interface PostProps {
   post: Post;
-  estimatedTime: number;
-  content: Array<[heading: string, body: string]>;
 }
 
-export default function Post({
-  post,
-  estimatedTime,
-  content,
-}: PostProps): JSX.Element {
+export default function Post({ post }: PostProps): JSX.Element {
   const router = useRouter();
 
   if (router.isFallback) {
     return <div>Carregando...</div>;
   }
 
-  const { title, author, banner } = post?.data;
+  const { title, author, banner, content } = post?.data;
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const formatedDate = useMemo(() => {
     return format(new Date(post?.first_publication_date), 'dd MMM yyyy', {
       locale: ptBR,
     });
   }, [post.first_publication_date]);
+
+  const wordsLength = useMemo(() => countWords(content), [content]);
+  const estimatedTime = useMemo(
+    () => calculateReading(wordsLength),
+    [wordsLength]
+  );
+  const formattedContent = useMemo(() => formatContent(content), [content]);
 
   return (
     <>
@@ -93,7 +94,7 @@ export default function Post({
           </div>
         </header>
 
-        {content.map(([heading, body]) => (
+        {formattedContent.map(([heading, body]) => (
           <section key={heading}>
             <h2>{heading}</h2>
             <div
@@ -122,14 +123,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const prismic = getPrismicClient({});
   const response = await prismic.getByUID('posts', String(slug));
 
-  const wordsLength = countWords(response.data.content);
-  const formattedContent = formatContent(response.data.content);
-
   return {
     props: {
       post: response,
-      estimatedTime: calculateReading(wordsLength),
-      content: formattedContent,
     },
   };
 };

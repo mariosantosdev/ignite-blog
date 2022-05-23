@@ -1,0 +1,30 @@
+.postContainer {
+  display: flex;
+  flex-direction: column;
+
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--heading);
+  }
+
+  h2 {
+    font-size: 1.125rem;
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+  }
+
+  footer {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+
+    span {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+}

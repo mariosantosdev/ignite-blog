@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 import { FiCalendar, FiUser } from 'react-icons/fi';
 import { format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
-import { useRouter } from 'next/router';
 
+import Link from 'next/link';
 import styles from './post.module.scss';
 
 interface PostProps {
@@ -21,33 +21,27 @@ export default function Post({
   date,
   author,
 }: PostProps): JSX.Element {
-  const router = useRouter();
-
   const formatedDate = useMemo(() => {
     return format(new Date(date), 'dd MMM yyyy', { locale: ptBR });
   }, [date]);
 
   return (
-    <div
-      role="button"
-      tabIndex={-1}
-      className={styles.postContainer}
-      onClick={() => router.push(`/post/${slug}`)}
-      aria-hidden="true"
-    >
-      <h1>{title}</h1>
-      <h2>{subtitle}</h2>
-      <footer>
-        <span>
-          <FiCalendar />
-          <time>{formatedDate}</time>
-        </span>
+    <Link href={`/post/${slug}`}>
+      <a className={styles.postContainer}>
+        <h1>{title}</h1>
+        <h2>{subtitle}</h2>
+        <footer>
+          <span>
+            <FiCalendar />
+            <time>{formatedDate}</time>
+          </span>
 
-        <span>
-          <FiUser />
-          <p>{author}</p>
-        </span>
-      </footer>
-    </div>
+          <span>
+            <FiUser />
+            <p>{author}</p>
+          </span>
+        </footer>
+      </a>
+    </Link>
   );
 }

@@ -1,1 +1,37 @@
-// TODO
+.container {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  min-height: calc(100vh - var(--header-height));
+  max-width: 700px;
+  margin: 0 auto;
+  padding-bottom: 3.25rem;
+
+  div {
+    & + div {
+      margin-top: 3rem;
+    }
+
+    &:last-of-type {
+      margin-bottom: 4rem;
+    }
+  }
+
+  .buttonLoadMorePosts {
+    margin-top: auto;
+    width: max-content;
+
+    background: transparent;
+    border: none;
+    color: var(--hightlight);
+    font-size: 1.125rem;
+    font-weight: 600;
+
+    transition: filter 0.2s;
+
+    &:hover {
+      filter: brightness(0.8);
+    }
+  }
+}

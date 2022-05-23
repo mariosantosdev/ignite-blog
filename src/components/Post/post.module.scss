@@ -1,12 +1,19 @@
 .postContainer {
   display: flex;
   flex-direction: column;
+  cursor: pointer;
+
+  &:hover h1 {
+    color: var(--hightlight);
+  }
 
   h1 {
     font-size: 1.75rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
     color: var(--heading);
+
+    transition: color 0.2s;
   }
 
   h2 {

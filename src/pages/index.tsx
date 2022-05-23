@@ -7,6 +7,7 @@ import Post from '../components/Post';
 
 import { getPrismicClient } from '../services/prismic';
 
+import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
 
 interface Post {
@@ -49,7 +50,7 @@ export default function Home({ postsPagination }: HomeProps): JSX.Element {
 
       <Header />
 
-      <main className={styles.container}>
+      <main className={`${styles.homeContainer} ${commonStyles.container}`}>
         {posts.map(post => (
           <Post
             key={post.uid}

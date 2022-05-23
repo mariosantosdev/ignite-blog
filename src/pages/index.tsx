@@ -79,7 +79,7 @@ export default function Home({ postsPagination }: HomeProps): JSX.Element {
 export const getStaticProps: GetStaticProps = async () => {
   const prismic = getPrismicClient({});
   const { next_page, results } = await prismic.getByType('posts', {
-    pageSize: 1,
+    pageSize: 5,
   });
 
   return {

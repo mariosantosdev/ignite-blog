@@ -1,1 +1,45 @@
-// TODO
+.cover {
+  width: 100%;
+  height: 400px;
+  position: absolute;
+  left: 0;
+  top: var(--header-height);
+}
+
+.postContainer {
+  margin-top: calc(400px + 5rem);
+
+  header {
+    margin-bottom: 4rem;
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+
+      margin-bottom: 1.5rem;
+    }
+
+    div {
+      display: flex;
+      flex-direction: row;
+      gap: 1.5rem;
+
+      span {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+      }
+    }
+  }
+
+  section {
+    margin-bottom: 4rem;
+
+    h2 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+  }
+}

@@ -1,5 +1,6 @@
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
+import { useCallback, useState } from 'react';
 
 import Header from '../components/Header';
 import Post from '../components/Post';
@@ -27,7 +28,19 @@ interface HomeProps {
   postsPagination: PostPagination;
 }
 
-export default function Home(): JSX.Element {
+export default function Home({ postsPagination }: HomeProps): JSX.Element {
+  const [posts, setPosts] = useState(postsPagination.results);
+  const [nextPage, setNextPage] = useState(postsPagination.next_page);
+
+  const fetchMorePosts = useCallback(() => {
+    fetch(nextPage)
+      .then(res => res.json())
+      .then(({ next_page, results }: PostPagination) => {
+        if (results.length) setPosts(prev => [...prev, ...results]);
+        setNextPage(next_page);
+      });
+  }, [nextPage]);
+
   return (
     <>
       <Head>
@@ -37,30 +50,44 @@ export default function Home(): JSX.Element {
       <Header />
 
       <main className={styles.container}>
-        <Post
-          title="Como utilizar Hooks"
-          subtitle="Pensando em sincronização em vez de ciclos de vida."
-          date="2021-03-15T19:25:28+0000"
-          author="Joseph Oliveira"
-        />
-        <Post
-          title="Criando um app CRA do zero"
-          subtitle="Tudo sobre como criar a sua primeira aplicação utilizando Create React App"
-          date="2021-03-15T19:25:28+0000"
-          author="Danilo Vieira"
-        />
+        {posts.map(post => (
+          <Post
+            key={post.uid}
+            slug={post.uid}
+            title={post.data.title}
+            subtitle={post.data.subtitle}
+            date={post.first_publication_date}
+            author={post.data.author}
+          />
+        ))}
 
-        <button type="button" className={styles.buttonLoadMorePosts}>
-          Carregar mais posts
-        </button>
+        {nextPage && (
+          <button
+            type="button"
+            className={styles.buttonLoadMorePosts}
+            onClick={fetchMorePosts}
+          >
+            Carregar mais posts
+          </button>
+        )}
       </main>
     </>
   );
 }
 
-// export const getStaticProps = async () => {
-//   // const prismic = getPrismicClient({});
-//   // const postsResponse = await prismic.getByType(TODO);
+export const getStaticProps: GetStaticProps = async () => {
+  const prismic = getPrismicClient({});
+  const { next_page, results } = await prismic.getByType('posts', {
+    pageSize: 1,
+  });
 
-//   // TODO
-// };
+  return {
+    props: {
+      postsPagination: {
+        next_page: next_page ?? '',
+        results,
+      },
+    },
+    revalidate: 60 * 60, // 1 hour
+  };
+};
